@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Witch App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&family=Bebas+Neue&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --font-login: 'Mountains of Christmas', cursive; /* Easter */
+            --font-main: 'Orbitron', sans-serif;             /* Barracuda */
+            --font-action: 'Bebas Neue', cursive;            /* Thunder */
+            --bg-dark: #050508;
+            --card-bg: #161622;
+            --purple-glow: rgba(123, 31, 162, 0.4);
+        }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-dark);
+            color: white; overflow-x: hidden;
+            padding-bottom: 100px;
+        }
+
+        /* --- LAYAR LOGIN --- */
+        #login-page {
+            font-family: var(--font-login);
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; width: 100%; position: fixed; z-index: 999;
+            background-color: var(--bg-dark);
+        }
+
+        .login-card {
+            background-color: var(--card-bg);
+            padding: 40px 30px; border-radius: 30px;
+            box-shadow: 0 0 30px var(--purple-glow);
+            text-align: center; width: 300px; position: relative;
+        }
+
+        .input-box {
+            background: #1b1b25; border: 1px solid #333;
+            border-radius: 15px; margin-bottom: 15px;
+            padding: 12px 15px; display: flex; align-items: center;
+        }
+        
+        .input-box input {
+            background: none; border: none; color: white;
+            width: 100%; outline: none; font-size: 16px;
+        }
+
+        /* --- DASHBOARD --- */
+        #dashboard-page { display: none; }
+
+        .top-bar {
+            padding: 15px 20px; display: flex; align-items: center;
+            font-family: var(--font-main); background: var(--bg-dark);
+        }
+
+        .banner-card {
+            margin: 10px 15px 20px 15px; height: 180px;
+            border-radius: 20px; overflow: hidden; position: relative;
+            border: 1px solid #333;
+        }
+        .banner-card img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- HOME --- */
+        #tab-home { font-family: var(--font-main); }
+        
+        .account-card {
+            background-color: var(--card-bg);
+            margin: 40px 15px 15px 15px; border-radius: 25px;
+            padding: 20px; position: relative;
+            border: 1px solid #222232; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .home-avatar {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 4px solid #7b1fa2; position: absolute;
+            top: -50px; left: 50%; transform: translateX(-50%);
+            box-shadow: 0 0 20px var(--purple-glow);
+        }
+
+        .header-purple {
+            background: linear-gradient(90deg, #7b1fa2, #ea80fc);
+            border-radius: 12px; padding: 10px 15px; margin-bottom: 15px;
+            font-size: 14px; font-weight: bold;
+        }
+
+        .info-row {
+            background: #1b1b25; border-radius: 15px;
+            padding: 12px 15px; margin-bottom: 10px;
+            display: flex; align-items: center; border: 1px solid #2a2a3a;
+        }
+        .info-row i { color: #8f8f9f; margin-right: 15px; font-size: 18px; }
+        .info-label { font-size: 10px; color: #8f8f9f; display: block; }
+        .info-val { font-size: 14px; font-weight: bold; }
+
+        /* --- WHATSAPP / ATTACK --- */
+        #tab-whatsapp { font-family: var(--font-action); }
+
+        .purple-bar {
+            background: #7b1fa2; color: white; padding: 12px 20px;
+            margin: 0 15px 10px 15px; border-radius: 10px;
+            font-size: 20px; letter-spacing: 1px;
+        }
+
+        .btn-big {
+            background: linear-gradient(to right, #7b1fa2, #b345f1);
+            margin: 10px 15px; padding: 18px; border-radius: 15px;
+            border: none; color: white; width: calc(100% - 30px);
+            font-family: var(--font-action); font-size: 24px;
+            cursor: pointer; box-shadow: 0 5px 20px var(--purple-glow);
+        }
+
+        /* --- NAVBAR --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%;
+            background: #101018; height: 80px;
+            display: flex; justify-content: space-around; align-items: center;
+            border-top: 1px solid #222; border-radius: 20px 20px 0 0;
+        }
+        .nav-item { text-align: center; color: #667; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: #ea80fc; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-item span { font-size: 12px; font-family: var(--font-main); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <div id="login-page">
+        <div class="login-card">
+            <div class="avatar-container" style="position:absolute; top:20px; left:100px;">
+                <img src="https://i.ibb.co.com/xtsjjYS9/IMG-1400.jpg" width="170" style="border-radius:25%; border:3px solid #7b1fa2;">
+            </div>
+            <h2 style="margin-top:100px; font-size:35px;">Gangsta Attacker</h2>
+            <p style="font-family:sans-serif; color:#8f8f9f; font-size:12px;">login dulu anjing</p>
+            
+            <div class="input-box">
+                <input type="text" id="userInput" placeholder="Username" style="font-family:sans-serif;">
+            </div>
+
+            <div class="input-box">
+                <input type="password" id="passInput" placeholder="Password" style="font-family:sans-serif;">
+                <i class="fas fa-eye-slash" onclick="togglePass()" id="eye" style="cursor:pointer; color:#667; margin-left:10px;"></i>
+            </div>
+
+            <button class="btn-big" onclick="masuk()" style="margin:0; width:100%;">LOGIN</button>
+        </div>
+    </div>
+
+    <div id="dashboard-page">
+        <div class="top-bar">
+            <i class="fas fa-bars" style="font-size:20px; margin-right:15px;"></i>
+            <span style="font-size:18px;">Gangsta Attacker</span>
+        </div>
+
+        <div id="tab-home" class="tab-content active">
+            <div class="banner-card">
+                <img src="https://i.ibb.co.com/5pr47P2/IMG-1399.jpg">
+            </div>
+            <div class="account-card">
+                <img src="https://i.ibb.co.com/xtsjjYS9/IMG-1400.jpg" class="home-avatar">
+                <div class="header-purple"><i class="fas fa-user"></i> &nbsp; ACC0UNT INF0</div>
+                <div class="info-row">
+                    <i class="fas fa-user-circle"></i>
+                    <div><span class="info-label">Username</span><span class="info-val" id="displayUsername">---</span></div>
+                </div>
+                <div class="info-row">
+                    <i class="fas fa-shield-alt"></i>
+                    <div><span class="info-label">Role</span><span class="info-val" id="roleDisplay">---</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-whatsapp" class="tab-content">
+            <div class="banner-card">
+                <img src="https://i.ibb.co.com/CpHzCpt1/IMG-1401.jpg"">
+            </div>
+            <div class="purple-bar">Number Target</div>
+            <div class="input-box" style="margin: 0 15px 20px 15px;"><input type="text" placeholder="+62xxxxxxxxxxx" style="font-family:sans-serif;"></div>
+            <div class="purple-bar">Select Bug</div>
+            <div class="input-box" style="margin: 0 15px 20px 15px;">
+                <select id="bugSelect" style="background:none; border:none; color:white; width:100%; outline:none; font-family: var(--font-action); font-size:18px;">
+                    <option>FREEZE WHATSAPP</option>
+                    <option>DELETE ALL CHAT</option>
+                    <option>NONACTIVED WHATSAPP ACCOUNT</option>
+                    <option>DELAY CHAT</option>
+                    <option>CRASH WHATSAPP</option>
+                </select>
+            </div>
+            <button class="btn-big" onclick="alert('Memproses Bug...')"><i class="fas fa-paper-plane"></i> KIRIM BUG</button>
+        </div>
+
+        <div id="tab-tools" class="tab-content">
+            <div class="purple-bar">OWNER MENU</div>
+            <p style="text-align:center; margin-top:50px; font-family:var(--font-action);">S0ON‼️</p>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="ganti('home', this)"><i class="fas fa-home"></i><span>Home</span></div>
+            <div class="nav-item" onclick="ganti('whatsapp', this)"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></div>
+            <div id="nav-tools" class="nav-item" onclick="ganti('tools', this)"><i class="fas fa-cog"></i><span>Tools</span></div>
+        </div>
+    </div>
+
+    <script>
+        // DATA USER
+        const userDatabase = {
+            "Kemzi": { pass: "Owner", role: "OWNER" },
+            "Member": { pass: "member1", role: "MEMBER" }
+        };
+
+        function togglePass() {
+            let p = document.getElementById("passInput");
+            let e = document.getElementById("eye");
+            if(p.type === "password") { p.type = "text"; e.className = "fas fa-eye"; }
+            else { p.type = "password"; e.className = "fas fa-eye-slash"; }
+        }
+
+        function masuk() {
+            let u = document.getElementById("userInput").value;
+            let p = document.getElementById("passInput").value;
+            
+            if (userDatabase[u] && userDatabase[u].pass === p) {
+                let r = userDatabase[u].role;
+                document.getElementById("displayUsername").innerText = u;
+                document.getElementById("roleDisplay").innerText = r;
+                document.getElementById("roleDisplay").style.color = (r === "OWNER") ? "#ff5252" : "#ffffff";
+                document.getElementById("nav-tools").style.display = (r === "OWNER") ? "block" : "none";
+                document.getElementById("login-page").style.display = "none";
+                document.getElementById("dashboard-page").style.display = "block";
+            } else {
+                alert("Login Gagal!");
+                window.location.reload();
+            }
+        }
+
+        function ganti(id, el) {
+            let tabs = document.getElementsByClassName("tab-content");
+            for(let i=0; i<tabs.length; i++) tabs[i].classList.remove("active");
+            document.getElementById("tab-"+id).classList.add("active");
+            let navs = document.getElementsByClassName("nav-item");
+            for(let i=0; i<navs.length; i++) navs[i].classList.remove("active");
+            el.classList.add("active");
+        }
+    </script>
+</body>
+</html>
