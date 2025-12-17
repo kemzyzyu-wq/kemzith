@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELL CHEAT v6.6.6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Orbitron:wght@400;700&display=swap');
+        
+        body { 
+            background: linear-gradient(180deg, #000000 0%, #1a0000 100%); 
+            color: #ff0000; 
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .satanic-font { font-family: 'Nosifer', cursive; }
+        .card { background: rgba(20, 0, 0, 0.8); border: 1px solid #660000; border-radius: 5px; }
+        .glow-red { text-shadow: 0 0 10px #ff0000; }
+        
+        /* Switch Styling */
+        .switch { position: relative; display: inline-block; width: 45px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #330000; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: #ff0000; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+        input:checked + .slider:before { transform: translateX(25px); background-color: #000; }
+
+        /* Cheat Activated Notification */
+        #cheat-alert {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #ff0000;
+            padding: 10px 20px;
+            border-radius: 50px;
+            z-index: 200;
+            box-shadow: 0 0 20px #ff0000;
+            animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: translateX(-50%) scale(0); opacity: 0; }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+
+        /* Modal Launcher */
+        #launch-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            width: 85%;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid #ff0000;
+            background: #110000;
+        }
+    </style>
+</head>
+<body class="p-5">
+
+    <div class="text-center mb-8">
+        <h1 class="satanic-font text-2xl mb-1 glow-red">THE HELL SENSIVITY</h1>
+        <p class="text-[9px] tracking-[0.3em] text-gray-500">HELL PERFORMANCE ENGINE</p>
+    </div>
+
+    <div class="mb-8">
+        <p class="text-[10px] mb-3 text-red-600 border-l-2 border-red-700 pl-2 uppercase">Execute Target</p>
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="prepareLaunch('Free Fire', 'freefire://')" class="card p-4 flex flex-col items-center border-red-600 active:scale-95 transition">
+                <img src="ff ori.jpg">
+                <span class="text-[10px] font-bold">FREE FIRE</span>
+            </button>
+            <button onclick="prepareLaunch('FF MAX', 'ffmax://')" class="card p-4 flex flex-col items-center border-red-600 active:scale-95 transition">
+                <img src="ffmx.jpg">
+                <span class="text-[10px] font-bold">FREE FIRE MAX</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="space-y-4">
+        <div class="card p-4 flex justify-between items-center border-l-4 border-l-red-600">
+            <div>
+                <h3 class="text-[10px] font-bold uppercase tracking-widest">HELL SENSI🥷</h3>
+                <p class="text-[8px] text-gray-500">Inject touch-response bypass</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="sensi-switch">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="card p-4 flex justify-between items-center border-l-4 border-l-red-600">
+            <div>
+                <h3 class="text-[10px] font-bold uppercase tracking-widest">CHECK Monitoring</h3>
+                <p class="text-[8px] text-gray-500">Real-time void data</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="rog-switch">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div id="rog-panel" class="hidden mt-6 card p-4 border-dashed border-red-900 bg-black/50">
+        <div class="grid grid-cols-3 gap-2 text-[10px] text-center">
+            <div><p class="text-gray-600">HEAT</p><p id="temp-val" class="text-red-500 font-bold">--</p></div>
+            <div><p class="text-gray-600">FPS</p><p id="fps-val" class="text-red-500 font-bold">--</p></div>
+            <div><p class="text-gray-600">LOAD</p><p id="ram-val" class="text-red-500 font-bold">--</p></div>
+        </div>
+    </div>
+
+    <div id="cheat-alert" class="text-white font-bold text-xs tracking-widest">
+        CHEAT ACTIVATED ✅
+    </div>
+
+    <div id="launch-modal">
+        <div class="modal-content">
+            <h2 id="modal-title" class="text-sm font-bold mb-4 glow-red uppercase"></h2>
+            <div class="h-1 w-full bg-red-900 mb-6">
+                <div id="progress" class="h-full bg-red-600 shadow-[0_0_10px_#ff0000]" style="width: 0%"></div>
+            </div>
+            <button id="mainkan-btn" class="w-full bg-red-700 text-black font-black py-3 text-xs tracking-tighter uppercase active:bg-red-500">
+                MAIN EXECUTE
+            </button>
+            <button onclick="closeModal()" class="mt-4 text-[9px] text-gray-600 uppercase">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        let currentUrl = "";
+        const sensiSwitch = document.getElementById('sensi-switch');
+        const cheatAlert = document.getElementById('cheat-alert');
+        const rogSwitch = document.getElementById('rog-switch');
+        const modal = document.getElementById('launch-modal');
+
+        // Logic for CHEAT ACTIVATED
+        sensiSwitch.addEventListener('change', function() {
+            if(this.checked) {
+                cheatAlert.style.display = 'block';
+                // Hilang otomatis setelah 3 detik
+                setTimeout(() => {
+                    cheatAlert.style.opacity = '0';
+                    setTimeout(() => { 
+                        cheatAlert.style.display = 'none'; 
+                        cheatAlert.style.opacity = '1';
+                    }, 500);
+                }, 3000);
+            } else {
+                cheatAlert.style.display = 'none';
+            }
+        });
+
+        function prepareLaunch(name, url) {
+            currentUrl = url;
+            document.getElementById('modal-title').innerText = "Infecting " + name + "...";
+            modal.style.display = 'flex';
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) clearInterval(interval);
+                else {
+                    width += 5;
+                    document.getElementById('progress').style.width = width + '%';
+                }
+            }, 25);
+        }
+
+        document.getElementById('mainkan-btn').onclick = () => {
+            window.location.href = currentUrl;
+            setTimeout(() => { closeModal(); }, 1000);
+        };
+
+        function closeModal() {
+            modal.style.display = 'none';
+            document.getElementById('progress').style.width = '0%';
+        }
+
+        // Monitoring Stats
+        setInterval(() => {
+            if(rogSwitch.checked) {
+                document.getElementById('temp-val').innerText = (39 + Math.random() * 3).toFixed(1) + "°C";
+                document.getElementById('fps-val').innerText = Math.floor(117 + Math.random() * 4) + " FPS";
+                document.getElementById('ram-val').innerText = Math.floor(88 + Math.random() * 10) + "%";
+            }
+        }, 1000);
+
+        rogSwitch.addEventListener('change', () => {
+            document.getElementById('rog-panel').classList.toggle('hidden', !rogSwitch.checked);
+        });
+    </script>
+</body>
+</html>
